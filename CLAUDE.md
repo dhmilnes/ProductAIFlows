@@ -30,6 +30,8 @@ ProductAgents is an AI-powered workflow automation toolkit. It connects analytic
 
 Rules added through reflection on recurring mistakes.
 
+- **Discovery before design prevents rework.** When building new agents, skills, or features, start with questions about use cases, constraints, and pain points. Understand the problem space before proposing solutions. Ask "What problems are you solving?" not "Here's what I built."
+
 - **Failing to read the personal folder leads to missed context.** ALWAYS check for an `personal/aboutme.md` for user-specific context and saved queries before starting work.
 
 - **Duplicating source docs bloats skill files and creates maintenance burden.** NEVER repeat what a template or external doc already explains. Link to the source for "what to include," only add supplementary value: format specifics, length limits, examples, gotchas.
