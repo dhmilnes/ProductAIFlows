@@ -40,6 +40,8 @@ Rules added through reflection on recurring mistakes.
 
 - **Skill instructions specify architecture, not suggestions.** When a skill says "use X agent for Y task" or lists Critical Rules, those define the workflow - not optional guidance. Read the Critical Rules section FIRST and treat agent delegation as constraints. Default behavior is to "just do the work" which violates orchestration patterns.
 
+- **Agent prompts define principles, not procedures.** AI agents already know common libraries and coding patterns. Focus on: domain principles (Few/Knaflic), hard constraints (file paths), preferences (ggplot style), and anti-patterns (no pie charts). Avoid detailed code templates - the agent can implement principles without step-by-step instructions. Over-prescription wastes context and reduces adaptability.
+
 ## Notion Formatting
 
 Before writing to Notion, read `docs/notion-formatting-guide.md`. Key gotcha: tables require XML syntax, not Markdown pipes.
