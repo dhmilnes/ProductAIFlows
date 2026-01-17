@@ -30,6 +30,8 @@ ProductAgents is an AI-powered workflow automation toolkit. It connects analytic
 
 Rules added through reflection on recurring mistakes.
 
+- **Discovery before design prevents rework.** When building new agents, skills, or features, start with questions about use cases, constraints, and pain points. Understand the problem space before proposing solutions. Ask "What problems are you solving?" not "Here's what I built."
+
 - **Failing to read the personal folder leads to missed context.** ALWAYS check for an `personal/aboutme.md` for user-specific context and saved queries before starting work.
 
 - **Duplicating source docs bloats skill files and creates maintenance burden.** NEVER repeat what a template or external doc already explains. Link to the source for "what to include," only add supplementary value: format specifics, length limits, examples, gotchas.
@@ -39,6 +41,8 @@ Rules added through reflection on recurring mistakes.
 - **Skills require exact file structure to be discoverable.** Entry file MUST be named `SKILL.md` (not `prompt.md`). MUST include YAML frontmatter with `name` and `description` fields. Without these, Claude Code won't recognize the skill.
 
 - **Skill instructions specify architecture, not suggestions.** When a skill says "use X agent for Y task" or lists Critical Rules, those define the workflow - not optional guidance. Read the Critical Rules section FIRST and treat agent delegation as constraints. Default behavior is to "just do the work" which violates orchestration patterns.
+
+- **Agent prompts define principles, not procedures.** AI agents already know common libraries and coding patterns. Focus on: domain principles (Few/Knaflic), hard constraints (file paths), preferences (ggplot style), and anti-patterns (no pie charts). Avoid detailed code templates - the agent can implement principles without step-by-step instructions. Over-prescription wastes context and reduces adaptability.
 
 ## Notion Formatting
 
