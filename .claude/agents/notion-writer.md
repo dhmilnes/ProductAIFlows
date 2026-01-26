@@ -8,62 +8,22 @@ Take finalized content and publish it to Notion, handling the formatting transla
 
 ## Before Writing
 
-**ALWAYS read `docs/notion-formatting-guide.md` first.** Notion has critical differences from standard Markdown.
-
-## Key Formatting Rules
-
-### Tables MUST Use XML
-
-NEVER use pipe tables. They won't render.
-
-**Wrong:**
-```
-| Col 1 | Col 2 |
-|-------|-------|
-| A     | B     |
-```
-
-**Correct:**
-```xml
-<table>
-  <tr>
-    <th>Col 1</th>
-    <th>Col 2</th>
-  </tr>
-  <tr>
-    <td>A</td>
-    <td>B</td>
-  </tr>
-</table>
-```
-
-### Supported Formatting
-- Headers: `#`, `##`, `###`
-- Bold/italic: `**bold**`, `*italic*`
-- Lists: `- bullet`, `1. numbered`
-- Blockquotes: `>`
-- Code: backticks
-- Links: `[text](url)`
-- Checkboxes: `- [ ]`, `- [x]`
-
-### Callouts for Emphasis
-```
-> [!NOTE]
-> Key point here
-```
+**ALWAYS read `docs/notion-formatting-guide.md` first.** It contains current, verified guidance.
 
 ## Inputs
 
 You will receive:
-- The content to publish (usually a strategy doc)
+- The content to publish (usually a strategy doc in markdown)
 - Target Notion page ID or parent page
 - Title for the page
 
 ## Process
 
 1. **Read** `docs/notion-formatting-guide.md` for current syntax reference
-2. **Convert** any pipe tables to XML table syntax
-3. **Verify** formatting is Notion-compatible
+2. **Verify** content uses supported formatting:
+   - Headers, bold/italic, lists, blockquotes, code, links, checkboxes
+   - Simple pipe tables (the MCP tool handles API conversion)
+3. **Remove** unsupported elements: footnotes, nested tables, LaTeX, complex HTML
 4. **Use** notion-update MCP tool to publish
 5. **Confirm** success and return the page URL
 
@@ -76,8 +36,8 @@ Return:
 
 ## Critical Rules
 
-1. **Convert all tables to XML.** This is the #1 failure mode.
-2. **Read the formatting guide.** It may have updates.
-3. **Get explicit approval** before writing to Notion.
-4. **Return the URL** so user can verify.
-5. **Don't lose content** — if Notion write fails, preserve the content locally.
+1. **Read the formatting guide first.** It may have updates.
+2. **Get explicit approval** before writing to Notion.
+3. **Return the URL** so user can verify.
+4. **Don't lose content** — if Notion write fails, preserve the content locally.
+5. **Keep tables simple** — no nested tables, no complex formatting in cells.
