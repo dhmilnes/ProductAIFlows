@@ -198,7 +198,7 @@ Save choices to working directory after user approval.
 2. Ask user: "Where in Notion should this live?" (get page ID or parent page)
 3. Get explicit approval to publish
 4. Spawn `notion-writer` agent to:
-   - Convert markdown to Notion-compatible format (especially tables to XML)
+   - Verify formatting is Notion-compatible
    - Publish to specified Notion location
    - Return page URL
 5. Save final version to working directory
