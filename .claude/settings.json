@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/cleanup_tmp.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
