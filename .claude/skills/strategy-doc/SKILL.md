@@ -1,5 +1,5 @@
 ---
-name: Strategy Doc Writer
+name: strategy-doc
 description: Develops product strategy documents using Cagan + Playing to Win frameworks with human-in-the-loop collaboration
 ---
 
@@ -92,7 +92,7 @@ CRITICAL: Follow this workflow exactly. Each phase has a human gate. Save artifa
 
 **Actions:**
 1. Spawn agents IN PARALLEL using Task tool:
-   - `notion-context-fetcher`: Find existing strategy docs, past decisions, related context
+   - `notion-researcher`: Find existing strategy docs, past decisions, related context
    - `competitor-researcher`: Market landscape, competitor positioning, trends
    - Use `analyze` skill if user has relevant data questions
 2. Synthesize agent outputs into a research brief
@@ -102,9 +102,30 @@ CRITICAL: Follow this workflow exactly. Each phase has a human gate. Save artifa
 **Human gate:** User reviews research, flags gaps, may redirect scope
 
 **Agents to spawn:**
-- `.claude/agents/notion-context-fetcher.md`
+- `.claude/agents/notion-researcher.md`
 - `.claude/agents/competitor-researcher.md`
 - (Phase 6) `.claude/agents/notion-writer.md`
+
+**Notion researcher output format for this skill:**
+```markdown
+## Existing Context: [Topic]
+
+### Relevant Prior Decisions
+- **[Decision]:** [Brief context and date]
+
+### Active Constraints
+- **[Constraint]:** [Why it matters]
+
+### Relevant Prior Research
+- **[Topic]:** [Key findings, source doc]
+
+### Open Questions from Prior Work
+- **[Question]:** [Context]
+
+### Source Documents
+| Document | Last Updated | Link |
+|----------|--------------|------|
+```
 
 ---
 

@@ -59,6 +59,17 @@ Always check skills for use cases.
 |-------|---------|------------|
 | `analyze` | Rigorous data investigation | User asks data questions |
 | `test-thinking` | A/B test variation design | User designing test variations |
+| `strategy-doc` | Product strategy documents using Cagan + P2W frameworks | User wants to develop strategy |
+
+**Agents** (`.claude/agents/`) — Sub-agents spawned by skills via Task tool. Not user-invokable directly.
+
+| Agent | Purpose | Used By |
+|-------|---------|---------|
+| `notion-researcher` | Notion search + synthesis (general or strategy-context format) | strategy-doc, any workflow |
+| `notion-writer` | Publishes content to Notion with proper formatting | strategy-doc |
+| `competitor-researcher` | Market landscape and competitive positioning | strategy-doc |
+| `strategy-writer` | Drafts strategy docs in exec-focused style | strategy-doc |
+| `strategy-reviewer` | Critiques strategy docs, surfaces blind spots | strategy-doc |
 
 ## Personal Query Library
 
@@ -112,6 +123,7 @@ When a query works well and seems reusable, offer to save it:
 | `output/visualizations/` | PNG charts from py-visualization-writer |
 | `scratch/uxr-[project]/` | UXR coding aggregation files |
 | `personal/queries/` | Saved reusable SQL queries |
+| `tmp/context/` | Agent research outputs for intra-session use |
 
 All folders are tracked in git but contents are gitignored (except personal/README.md and templates).
 
