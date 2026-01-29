@@ -15,6 +15,7 @@
       "mcp__demo-data__list_tables",
       "mcp__demo-data__describe_table",
       "mcp__demo-data__query",
+      "mcp__notion__notion-create-pages"
     ]
   },
   "enableAllProjectMcpServers": true,

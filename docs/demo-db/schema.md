@@ -35,13 +35,6 @@ Daily metrics broken down by acquisition channel.
 | conversions | INTEGER | |
 | revenue | REAL | |
 
-**Channels:**
-- `organic` — Organic Search
-- `paid_search` — Paid Search
-- `advisor` — Advisor Referral (~20% of traffic, 30% of direct revenue)
-- `partner` — Partner/Institution
-- `direct` — Direct traffic
-
 ---
 
 ### product_metrics
@@ -56,12 +49,6 @@ Daily metrics by product line.
 | revenue | REAL | Product revenue |
 | refunds | INTEGER | Refund count |
 | refund_amount | REAL | Refund dollars |
-
-**Products:**
-- `core_curriculum` — Core Curriculum ($29.99)
-- `professional_cert` — Professional Certification ($149.99)
-- `pathway_bundle` — Pathway Bundle ($89.99)
-- `enterprise` — Enterprise License ($499.99)
 
 ---
 
@@ -78,26 +65,6 @@ Individual support tickets. **Key table for cancel/pause analysis.**
 | sentiment_score | REAL | -1.0 to 0 (all complaints) |
 | resolution_hours | REAL | Time to resolve |
 | escalated | INTEGER | 0 or 1 |
-
-**Categories:**
-- `cancellation` — Cancel/pause issues (THE PROBLEM)
-- `billing` — Charges, refunds, payment failures
-- `technical` — Video, login, app issues
-- `account` — Password, email changes
-- `content` — Course quality issues
-
-**Subcategories for cancellation:**
-- `cancel_process_unclear`
-- `cant_find_cancel_button`
-- `unexpected_charge_after_cancel`
-- `cancel_confirmation_missing`
-
-**Channels:**
-- `email` — Direct email support
-- `chat` — Live chat
-- `app_review` — App store reviews (PUBLIC - LLMs scrape)
-- `social` — Social media mentions (PUBLIC - LLMs scrape)
-- `partner_escalation` — Partner-reported issues (recent)
 
 ---
 
@@ -116,6 +83,21 @@ Weekly conversion funnel metrics.
 
 ---
 
+### lead_form_metrics
+Daily B2B lead form performance by campaign.
+
+| Column | Type | Notes |
+|--------|------|-------|
+| date | TEXT | YYYY-MM-DD (weekdays only) |
+| campaign_id | TEXT | digital-badges, bootcamp-completion, ai-skills-verify, higher-ed-micro |
+| campaign_name | TEXT | Human-readable name |
+| lp_visits | INTEGER | Landing page visits from this campaign |
+| form_starts | INTEGER | Users who started the lead form |
+| form_completions | INTEGER | Users who submitted the form |
+| conversion_rate | REAL | form_completions / lp_visits |
+
+---
+
 ## Analysis Hints
 
 ### YoY Comparisons
@@ -123,12 +105,3 @@ Use 364-day lookback to align day-of-week:
 ```sql
 date(date, '-364 days')
 ```
-
-### The Cancel/Pause Story
-Cancellation tickets have risen from ~15% to ~35% of all tickets since July 2025. The issue is concentrated in:
-- Public channels (app_review, social) — what LLMs surface
-- Billing cycle days (1st and 15th of month)
-- Subcategory: `cant_find_cancel_button` is the top complaint
-
-### Channel Performance
-Advisor channel represents ~20% of sessions but ~30% of direct revenue (higher conversion rate). Partner channel is institutional deals (ASU, consortium).

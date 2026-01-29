@@ -11,11 +11,6 @@ A lightweight SQLite MCP server for demoing the ProductAIFlows `analyze` skill.
 - Support tickets with categories and sentiment
 - Weekly funnel metrics
 
-**Baked-in story:** The cancel/pause reputation problem
-- Cancellation complaints have risen from ~15% to ~35% of tickets over 6 months
-- Public channels (app reviews, social) are over-indexed for cancellation issues
-- Partner escalations started appearing in Jan 2026 (ASU legal concern)
-
 ## Setup
 
 ### 1. Install dependencies

@@ -141,6 +141,20 @@ def create_tables(conn):
         )
     """)
 
+    # B2B lead form metrics by campaign
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS lead_form_metrics (
+            date TEXT,
+            campaign_id TEXT,
+            campaign_name TEXT,
+            lp_visits INTEGER,
+            form_starts INTEGER,
+            form_completions INTEGER,
+            conversion_rate REAL,
+            PRIMARY KEY (date, campaign_id)
+        )
+    """)
+
     # Weekly funnel metrics
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS weekly_funnel (
@@ -185,9 +199,17 @@ def seasonality_factor(date):
 
 
 def growth_factor(date, start_date):
-    """Year-over-year growth trend (~15% annually)."""
+    """Year-over-year growth trend — decelerates from ~15% to ~8% in recent months."""
     days_elapsed = (date - start_date).days
-    annual_growth = 0.15
+    # Growth decelerates starting Sep 2025
+    decel_start = datetime(2025, 9, 1)
+    if date < decel_start:
+        annual_growth = 0.15
+    else:
+        # Taper from 15% to 8% over ~5 months
+        days_into_decel = (date - decel_start).days
+        progress = min(days_into_decel / 150, 1.0)
+        annual_growth = 0.15 - (0.07 * progress)  # 15% → 8%
     daily_growth = (1 + annual_growth) ** (1/365)
     return daily_growth ** days_elapsed
 
@@ -543,6 +565,92 @@ def generate_weekly_funnel(conn):
     conn.commit()
 
 
+def generate_lead_form_metrics(conn):
+    """
+    Generate B2B lead form metrics by campaign.
+
+    Old campaigns (digital-badges, bootcamp-completion) convert well (~8-12%).
+    New campaigns (ai-skills-verify Oct 2025, higher-ed-micro Dec 2025) get
+    traffic but don't convert (~2-3%) because the LP messaging doesn't match.
+    """
+    cursor = conn.cursor()
+
+    campaigns = [
+        {
+            "id": "digital-badges",
+            "name": "Digital Badges for Graduates",
+            "launch": datetime(2024, 3, 1),
+            "base_visits": 120,
+            "conv_rate": (0.09, 0.12),  # 9-12%
+        },
+        {
+            "id": "bootcamp-completion",
+            "name": "Bootcamp Completion Certificates",
+            "launch": datetime(2024, 6, 1),
+            "base_visits": 90,
+            "conv_rate": (0.07, 0.10),  # 7-10%
+        },
+        {
+            "id": "ai-skills-verify",
+            "name": "AI-Powered Skills Verification",
+            "launch": datetime(2025, 10, 1),
+            "base_visits": 200,  # Good ad performance
+            "conv_rate": (0.02, 0.035),  # LP mismatch
+        },
+        {
+            "id": "higher-ed-micro",
+            "name": "Micro-Credentials for Higher Ed",
+            "launch": datetime(2025, 12, 1),
+            "base_visits": 150,
+            "conv_rate": (0.015, 0.03),  # LP mismatch
+        },
+    ]
+
+    current = datetime(2024, 3, 1)  # Start when first campaign launches
+    while current <= END_DATE:
+        dow = day_of_week_factor(current)
+        # Only weekdays get meaningful B2B traffic
+        if current.weekday() >= 5:
+            current += timedelta(days=1)
+            continue
+
+        for camp in campaigns:
+            if current < camp["launch"]:
+                continue
+
+            # Ramp up visits over first 30 days
+            days_live = (current - camp["launch"]).days
+            ramp = min(days_live / 30, 1.0)
+
+            noise = random.gauss(1.0, 0.15)
+            visits = max(1, int(camp["base_visits"] * dow * ramp * noise))
+
+            # Form starts: ~40-55% of visitors start the form
+            form_start_rate = random.uniform(0.40, 0.55)
+            form_starts = int(visits * form_start_rate)
+
+            # Completions based on campaign conversion rate
+            conv_rate = random.uniform(*camp["conv_rate"])
+            form_completions = int(visits * conv_rate)
+            actual_rate = form_completions / visits if visits > 0 else 0
+
+            cursor.execute("""
+                INSERT INTO lead_form_metrics VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (
+                current.strftime("%Y-%m-%d"),
+                camp["id"],
+                camp["name"],
+                visits,
+                form_starts,
+                form_completions,
+                round(actual_rate, 4)
+            ))
+
+        current += timedelta(days=1)
+
+    conn.commit()
+
+
 def main():
     # Remove existing database
     if DB_PATH.exists():
@@ -565,6 +673,9 @@ def main():
     print("Generating support tickets...")
     generate_support_tickets(conn)
 
+    print("Generating lead form metrics...")
+    generate_lead_form_metrics(conn)
+
     print("Generating weekly funnel...")
     generate_weekly_funnel(conn)
 
@@ -582,6 +693,27 @@ def main():
 
     cursor.execute("SELECT COUNT(*) FROM support_tickets")
     print(f"support_tickets: {cursor.fetchone()[0]} rows")
+
+    cursor.execute("SELECT COUNT(*) FROM lead_form_metrics")
+    print(f"lead_form_metrics: {cursor.fetchone()[0]} rows")
+
+    # Show lead form conversion by campaign (recent month)
+    print("\n--- Lead Form Conversion by Campaign (Last 30 Days) ---")
+    cursor.execute("""
+        SELECT
+            campaign_id,
+            SUM(lp_visits) as visits,
+            SUM(form_completions) as completions,
+            ROUND(100.0 * SUM(form_completions) / SUM(lp_visits), 1) as conv_rate
+        FROM lead_form_metrics
+        WHERE date >= date('2026-01-26', '-30 days')
+        GROUP BY campaign_id
+        ORDER BY conv_rate DESC
+    """)
+    print("Campaign            | Visits | Completions | Conv %")
+    print("--------------------|--------|-------------|-------")
+    for row in cursor.fetchall():
+        print(f"{row[0]:20s}| {row[1]:6} | {row[2]:11} | {row[3]:5}%")
 
     # Show the cancel/pause trend
     print("\n--- Cancellation Ticket Trend (Monthly) ---")
