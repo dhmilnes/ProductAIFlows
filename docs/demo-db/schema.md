@@ -53,7 +53,7 @@ Daily metrics by product line.
 ---
 
 ### support_tickets
-Individual support tickets. **Key table for cancel/pause analysis.**
+Individual support tickets.
 
 | Column | Type | Notes |
 |--------|------|-------|

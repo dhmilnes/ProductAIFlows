@@ -5,9 +5,8 @@ Generate sample data for the demo MCP server.
 Creates a SQLite database with realistic LearnFlow metrics:
 - 2 years of daily data (for YoY comparisons)
 - Multiple channels and products
-- Support tickets showing the cancel/pause reputation problem
-
-Demo is set in Week 1 of the LearnFlow story — problems are surfacing.
+- Support tickets with categories and sentiment
+- B2B lead form metrics by campaign
 
 Run this script to regenerate sample_data.db.
 """
@@ -31,16 +30,14 @@ PRODUCTS = [
     ("enterprise", "Enterprise License", 499.99),
 ]
 
-# Channels — advisor is at 30% (current state, not yet grown)
 CHANNELS = [
     ("organic", "Organic Search", 0.32),
     ("paid_search", "Paid Search", 0.23),
-    ("advisor", "Advisor Referral", 0.20),  # ~30% of direct (excl. partner)
+    ("advisor", "Advisor Referral", 0.20),
     ("partner", "Partner/Institution", 0.15),
     ("direct", "Direct", 0.10),
 ]
 
-# Support ticket categories
 TICKET_CATEGORIES = {
     "cancellation": [
         ("cancel_process_unclear", 0.35),
@@ -71,12 +68,11 @@ TICKET_CATEGORIES = {
     ],
 }
 
-# Channels where tickets come from — public channels are the reputation risk
 TICKET_CHANNELS = [
     ("email", 0.35),
     ("chat", 0.25),
-    ("app_review", 0.20),      # Public — LLMs scrape these
-    ("social", 0.12),          # Public — LLMs scrape these
+    ("app_review", 0.20),
+    ("social", 0.12),
     ("partner_escalation", 0.08),
 ]
 
@@ -127,7 +123,6 @@ def create_tables(conn):
         )
     """)
 
-    # Support tickets — the cancel/pause reputation problem
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS support_tickets (
             ticket_id INTEGER PRIMARY KEY,
@@ -199,17 +194,15 @@ def seasonality_factor(date):
 
 
 def growth_factor(date, start_date):
-    """Year-over-year growth trend — decelerates from ~15% to ~8% in recent months."""
+    """Year-over-year growth trend with seasonal variation."""
     days_elapsed = (date - start_date).days
-    # Growth decelerates starting Sep 2025
     decel_start = datetime(2025, 9, 1)
     if date < decel_start:
         annual_growth = 0.15
     else:
-        # Taper from 15% to 8% over ~5 months
         days_into_decel = (date - decel_start).days
         progress = min(days_into_decel / 150, 1.0)
-        annual_growth = 0.15 - (0.07 * progress)  # 15% → 8%
+        annual_growth = 0.15 - (0.07 * progress)
     daily_growth = (1 + annual_growth) ** (1/365)
     return daily_growth ** days_elapsed
 
@@ -372,15 +365,7 @@ def generate_product_metrics(conn):
 
 
 def generate_support_tickets(conn):
-    """
-    Generate support tickets showing the cancel/pause reputation problem.
-
-    Key patterns:
-    1. Cancellation complaints rising steadily over past 6 months
-    2. Public channels (app_review, social) have worst cancellation sentiment
-    3. Spikes around billing dates (1st and 15th)
-    4. Partner escalations appear in recent weeks (ASU legal concern)
-    """
+    """Generate support tickets with category and channel distributions."""
     cursor = conn.cursor()
 
     ticket_id = 1
@@ -396,13 +381,10 @@ def generate_support_tickets(conn):
         # Calculate base tickets for the day
         daily_tickets = int(base_daily_tickets * growth * dow * random.uniform(0.8, 1.2))
 
-        # --- THE KEY PATTERN: Cancellation complaints rising ---
-        # Calculate how far into the "problem period" we are
-        # Problem started accelerating ~6 months ago (mid-July 2025)
+        # Category distribution shifts over time
         problem_start = datetime(2025, 7, 15)
         if current >= problem_start:
             days_into_problem = (current - problem_start).days
-            # Cancellation share grows from 15% to 35% over 6 months
             cancel_share_boost = min(days_into_problem / 180, 1.0) * 0.20
         else:
             cancel_share_boost = 0
@@ -448,14 +430,12 @@ def generate_support_tickets(conn):
                     subcategory = subcat
                     break
 
-            # Pick channel — cancellation issues more likely on public channels
             if category == "cancellation":
-                # Cancellation complaints disproportionately show up in public channels
                 channel_weights = [
                     ("email", 0.25),
                     ("chat", 0.15),
-                    ("app_review", 0.30),    # Over-indexed
-                    ("social", 0.20),        # Over-indexed
+                    ("app_review", 0.30),
+                    ("social", 0.20),
                     ("partner_escalation", 0.10),
                 ]
             else:
@@ -470,14 +450,11 @@ def generate_support_tickets(conn):
                     channel = chan
                     break
 
-            # Partner escalations only appear recently (past 2 weeks)
-            # This is the ASU legal concern surfacing
             if channel == "partner_escalation":
                 if current < datetime(2026, 1, 10):
-                    channel = "email"  # Fall back to email for older tickets
+                    channel = "email"
 
-            # Sentiment score (-1.0 to 0, all are complaints)
-            # Cancellation issues have worse sentiment, especially on public channels
+            # Sentiment score
             base_sentiment = random.uniform(-0.7, -0.3)
             if category == "cancellation":
                 base_sentiment -= 0.2
@@ -488,9 +465,9 @@ def generate_support_tickets(conn):
             # Resolution time (hours)
             base_resolution = random.gauss(24, 12)
             if category == "cancellation":
-                base_resolution *= 1.5  # Cancellation takes longer to resolve
+                base_resolution *= 1.5
             if channel == "partner_escalation":
-                base_resolution *= 0.5  # Partner issues get prioritized
+                base_resolution *= 0.5
             resolution_hours = max(1, base_resolution)
 
             # Escalation flag
@@ -566,13 +543,7 @@ def generate_weekly_funnel(conn):
 
 
 def generate_lead_form_metrics(conn):
-    """
-    Generate B2B lead form metrics by campaign.
-
-    Old campaigns (digital-badges, bootcamp-completion) convert well (~8-12%).
-    New campaigns (ai-skills-verify Oct 2025, higher-ed-micro Dec 2025) get
-    traffic but don't convert (~2-3%) because the LP messaging doesn't match.
-    """
+    """Generate B2B lead form metrics by campaign."""
     cursor = conn.cursor()
 
     campaigns = [
@@ -594,15 +565,15 @@ def generate_lead_form_metrics(conn):
             "id": "ai-skills-verify",
             "name": "AI-Powered Skills Verification",
             "launch": datetime(2025, 10, 1),
-            "base_visits": 200,  # Good ad performance
-            "conv_rate": (0.02, 0.035),  # LP mismatch
+            "base_visits": 200,
+            "conv_rate": (0.02, 0.035),
         },
         {
             "id": "higher-ed-micro",
             "name": "Micro-Credentials for Higher Ed",
             "launch": datetime(2025, 12, 1),
             "base_visits": 150,
-            "conv_rate": (0.015, 0.03),  # LP mismatch
+            "conv_rate": (0.015, 0.03),
         },
     ]
 
@@ -697,41 +668,8 @@ def main():
     cursor.execute("SELECT COUNT(*) FROM lead_form_metrics")
     print(f"lead_form_metrics: {cursor.fetchone()[0]} rows")
 
-    # Show lead form conversion by campaign (recent month)
-    print("\n--- Lead Form Conversion by Campaign (Last 30 Days) ---")
-    cursor.execute("""
-        SELECT
-            campaign_id,
-            SUM(lp_visits) as visits,
-            SUM(form_completions) as completions,
-            ROUND(100.0 * SUM(form_completions) / SUM(lp_visits), 1) as conv_rate
-        FROM lead_form_metrics
-        WHERE date >= date('2026-01-26', '-30 days')
-        GROUP BY campaign_id
-        ORDER BY conv_rate DESC
-    """)
-    print("Campaign            | Visits | Completions | Conv %")
-    print("--------------------|--------|-------------|-------")
-    for row in cursor.fetchall():
-        print(f"{row[0]:20s}| {row[1]:6} | {row[2]:11} | {row[3]:5}%")
-
-    # Show the cancel/pause trend
-    print("\n--- Cancellation Ticket Trend (Monthly) ---")
-    cursor.execute("""
-        SELECT
-            strftime('%Y-%m', created_date) as month,
-            COUNT(*) as total_tickets,
-            SUM(CASE WHEN category = 'cancellation' THEN 1 ELSE 0 END) as cancel_tickets,
-            ROUND(100.0 * SUM(CASE WHEN category = 'cancellation' THEN 1 ELSE 0 END) / COUNT(*), 1) as cancel_pct
-        FROM support_tickets
-        WHERE created_date >= '2025-07-01'
-        GROUP BY month
-        ORDER BY month
-    """)
-    print("Month      | Total | Cancel | Cancel %")
-    print("-----------|-------|--------|----------")
-    for row in cursor.fetchall():
-        print(f"{row[0]}  | {row[1]:5} | {row[2]:6} | {row[3]:6}%")
+    cursor.execute("SELECT COUNT(*) FROM lead_form_metrics")
+    print(f"lead_form_metrics: {cursor.fetchone()[0]} rows")
 
     conn.close()
     print(f"\nDatabase saved to: {DB_PATH}")

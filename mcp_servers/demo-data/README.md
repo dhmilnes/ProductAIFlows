@@ -102,6 +102,19 @@ Individual support tickets (~20k rows)
 | resolution_hours | REAL | Time to resolve |
 | escalated | INTEGER | 0 or 1 |
 
+### `lead_form_metrics`
+Daily B2B lead form performance by campaign
+
+| Column | Type | Description |
+|--------|------|-------------|
+| date | TEXT | YYYY-MM-DD (weekdays only) |
+| campaign_id | TEXT | Campaign identifier |
+| campaign_name | TEXT | Display name |
+| lp_visits | INTEGER | Landing page visits |
+| form_starts | INTEGER | Form interactions started |
+| form_completions | INTEGER | Form submissions |
+| conversion_rate | REAL | Completions / visits |
+
 ### `weekly_funnel`
 Weekly conversion funnel
 
@@ -110,46 +123,6 @@ Weekly conversion funnel
 | week_start | TEXT |
 | visitors, product_views, add_to_cart, checkout_started, checkout_completed | INTEGER |
 | conversion_rate | REAL |
-
-## Demo Queries
-
-**Cancellation trend by month:**
-```sql
-SELECT
-    strftime('%Y-%m', created_date) as month,
-    COUNT(*) as total_tickets,
-    SUM(CASE WHEN category = 'cancellation' THEN 1 ELSE 0 END) as cancel_tickets,
-    ROUND(100.0 * SUM(CASE WHEN category = 'cancellation' THEN 1 ELSE 0 END) / COUNT(*), 1) as cancel_pct
-FROM support_tickets
-WHERE created_date >= '2025-07-01'
-GROUP BY month
-ORDER BY month
-```
-
-**Cancellation issues by channel:**
-```sql
-SELECT
-    channel,
-    COUNT(*) as tickets,
-    ROUND(AVG(sentiment_score), 2) as avg_sentiment
-FROM support_tickets
-WHERE category = 'cancellation'
-  AND created_date >= '2025-10-01'
-GROUP BY channel
-ORDER BY tickets DESC
-```
-
-**YoY revenue comparison:**
-```sql
-SELECT
-    strftime('%Y-%W', date) as year_week,
-    SUM(revenue) as revenue
-FROM daily_metrics
-WHERE date >= date('2026-01-26', '-14 days')
-   OR date >= date('2025-01-26', '-14 days') AND date < '2025-02-10'
-GROUP BY year_week
-ORDER BY year_week
-```
 
 ## Swapping in Real Data
 
