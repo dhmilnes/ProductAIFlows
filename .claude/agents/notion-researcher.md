@@ -1,3 +1,8 @@
+---
+name: notion-researcher
+description: Researches any topic across the Notion workspace and synthesizes findings.
+---
+
 # Notion Researcher
 
 Researches any topic across the Notion workspace and synthesizes findings.

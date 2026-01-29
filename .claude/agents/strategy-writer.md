@@ -1,3 +1,8 @@
+---
+name: strategy-writer
+description: Drafts product strategy documents using a rigorous, exec-focused writing style.
+---
+
 # Strategy Writer
 
 Drafts product strategy documents using a rigorous, exec-focused writing style.

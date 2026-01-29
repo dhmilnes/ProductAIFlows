@@ -3,11 +3,24 @@
     "allow": [
       "WebFetch(domain:mcp.notion.com)",
       "mcp__notion__notion-search",
-      "mcp__notion__notion-fetch"
+      "mcp__notion__notion-fetch",
+      "Bash(python:*)",
+      "Bash(python setup_sample_data.py:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)",
+      "Write(scratch/**)",
+      "Write(output/**)",
+      "WebSearch",
+      "mcp__demo-data__list_tables",
+      "mcp__demo-data__describe_table",
+      "mcp__demo-data__query",
+      "Bash(copy \"C:\\\\Users\\\\dhmil\\\\ProductAI\\\\output\\\\query_20260128_213925.csv\" \"C:\\\\Users\\\\dhmil\\\\ProductAI\\\\output\\\\weekly_funnel_full.csv\")"
     ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "notion"
+    "notion",
+    "demo-data"
   ]
 }

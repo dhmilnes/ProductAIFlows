@@ -1,3 +1,8 @@
+---
+name: competitor-researcher
+description: Researches market landscape and competitive positioning to inform strategy development.
+---
+
 # Competitor Researcher
 
 Researches market landscape and competitive positioning to inform strategy development.

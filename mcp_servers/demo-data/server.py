@@ -7,7 +7,9 @@ Ships with sample LearnFlow metrics data. Swap in your own database by replacing
 """
 
 import sqlite3
-import json
+import csv
+import io
+from datetime import datetime
 from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 
@@ -16,6 +18,11 @@ mcp = FastMCP("demo-data")
 
 # Database path (same directory as this script)
 DB_PATH = Path(__file__).parent / "sample_data.db"
+
+# Auto-save and display thresholds
+CSV_SAVE_THRESHOLD = 3      # Save CSV when rows exceed this
+DISPLAY_ROW_LIMIT = 20      # Truncate display output beyond this
+TMP_DIR = Path(__file__).parent.parent.parent / "tmp" / "csv"
 
 
 def get_connection():
@@ -51,14 +58,42 @@ def query(sql: str) -> str:
 
         # Get column names
         columns = [description[0] for description in cursor.description]
-
-        # Format as CSV for easy parsing
-        result_lines = [",".join(columns)]
-        for row in rows:
-            result_lines.append(",".join(str(val) if val is not None else "" for val in row))
-
         conn.close()
-        return "\n".join(result_lines)
+
+        # Format all rows as CSV text
+        def format_rows(row_list):
+            lines = [",".join(columns)]
+            for row in row_list:
+                lines.append(",".join(str(val) if val is not None else "" for val in row))
+            return "\n".join(lines)
+
+        total = len(rows)
+        csv_note = ""
+
+        # Auto-save CSV and SQL to tmp when result set is large enough
+        if total > CSV_SAVE_THRESHOLD:
+            TMP_DIR.mkdir(parents=True, exist_ok=True)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            csv_path = TMP_DIR / f"query_{timestamp}.csv"
+            with open(csv_path, "w", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow(columns)
+                for row in rows:
+                    writer.writerow([(val if val is not None else "") for val in row])
+            sql_path = TMP_DIR / f"query_{timestamp}.sql"
+            with open(sql_path, "w", encoding="utf-8") as f:
+                f.write(sql)
+            csv_note = f"\nFull results saved to: {csv_path}\nQuery saved to: {sql_path}"
+
+        # Truncate display if needed
+        if total > DISPLAY_ROW_LIMIT:
+            display = format_rows(rows[:DISPLAY_ROW_LIMIT])
+            return f"{display}\n\nShowing {DISPLAY_ROW_LIMIT} of {total} rows.{csv_note}"
+
+        display = format_rows(rows)
+        if csv_note:
+            return f"{display}{csv_note}"
+        return display
 
     except Exception as e:
         return f"Error executing query: {str(e)}"

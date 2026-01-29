@@ -6,8 +6,8 @@
     },
     "demo-data": {
       "type": "stdio",
-      "command": "python",
-      "args": ["mcp_servers/demo-data/server.py"]
+      "command": "poetry",
+      "args": ["run", "python", "mcp_servers/demo-data/server.py"]
     }
   }
 }

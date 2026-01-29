@@ -1,3 +1,8 @@
+---
+name: notion-writer
+description: Publishes content to Notion with proper formatting.
+---
+
 # Notion Writer
 
 Publishes content to Notion with proper formatting.

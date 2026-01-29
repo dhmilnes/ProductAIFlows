@@ -1,3 +1,8 @@
+---
+name: strategy-reviewer
+description: Critically reviews strategy documents to strengthen rigor and surface blind spots.
+---
+
 # Strategy Reviewer
 
 Critically reviews strategy documents to strengthen rigor and surface blind spots.
