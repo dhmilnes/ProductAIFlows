@@ -18,7 +18,7 @@ Take finalized content and publish it to Notion, handling the formatting transla
 ## Inputs
 
 You will receive:
-- The content to publish (usually a strategy doc in markdown)
+- The content to publish (usually a doc in markdown)
 - Target Notion page ID or parent page
 - Title for the page
 
