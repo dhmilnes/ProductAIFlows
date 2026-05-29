@@ -60,6 +60,14 @@ Always check skills for use cases.
 | `analyze` | Rigorous data investigation | User asks data questions |
 | `test-thinking` | A/B test variation design | User designing test variations |
 | `strategy-doc` | Product strategy documents using Cagan + P2W frameworks | User wants to develop strategy |
+| `red-team` | Adversarial analysis of proposals, arguments, product ideas | `/red-team`, "poke holes in this", "stress test this" |
+| `make-my` | Author a new personal runbook in `personal/prompts/` | "save this", "make this reusable", "turn this into a /my" |
+
+**Commands** (`.claude/commands/`) — User-invokable via `/command-name`.
+
+| Command | Purpose |
+|---------|---------|
+| `my` | Run a saved personal prompt: `/my <name> [extras]` |
 
 **Agents** (`.claude/agents/`) — Sub-agents spawned by skills via Task tool. Not user-invokable directly.
 
