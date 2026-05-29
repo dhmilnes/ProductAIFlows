@@ -6,6 +6,12 @@ tmp/*
 personal/*
 !personal/README.md
 !personal/.gitkeep
+!personal/prompts/
+personal/prompts/*
+!personal/prompts/.gitkeep
+!personal/scripts/
+personal/scripts/*
+!personal/scripts/.gitkeep
 
 # Research briefs (contents gitignored)
 research_briefs/*
