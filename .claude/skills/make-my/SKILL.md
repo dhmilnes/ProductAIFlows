@@ -25,7 +25,7 @@ A `/my` invocation always loads the runbook. The runbook may instruct the runtim
 | `personal/queries/<name>.sql` | Saved SQL queries (YAML-frontmatter format documented in CLAUDE.md) | Loaded and run via `bibot_query` with param substitution |
 | `personal/<other>/` | Templates, CSVs, doc references | Read by path |
 
-A runbook can name files with the same stem as itself (e.g., `weekly-cx.md` referencing `weekly-cx.py`) or pull from shared artifacts. Match what's natural for the workflow — don't force a 1:1 pairing.
+A runbook can name files with the same stem as itself (e.g., `weekly-report.md` referencing `weekly-report.py`) or pull from shared artifacts. Match what's natural for the workflow — don't force a 1:1 pairing.
 
 ## The flow
 
@@ -34,8 +34,8 @@ A runbook can name files with the same stem as itself (e.g., `weekly-cx.md` refe
 **Interview vs. infer.** If the current conversation already contains the workflow being captured (the user just finished doing the thing), pull as much as possible from history — steps taken, tools used, inputs, the output format that landed well, corrections the user made. Only ask to fill genuine gaps. If there's no prior context (cold start: "make me a /my that does X"), do the full interview.
 
 Get clear on:
-1. **What should this prompt do?** One or two sentences. Push back if it's vague — "summarize stuff" is not a prompt; "summarize the latest CX NPS survey responses into themes with verbatim quotes" is.
-2. **What's the name?** Lowercase, hyphens, no extension (e.g., `weekly-cx`, `nps-themes`, `morning-standup`). Suggest one based on the intent; let the user override.
+1. **What should this prompt do?** One or two sentences. Push back if it's vague — "summarize stuff" is not a prompt; "summarize last week's experiment results into a ranked list with effect sizes and confidence intervals" is.
+2. **What's the name?** Lowercase, hyphens, no extension (e.g., `weekly-report`, `experiment-summary`, `morning-standup`). Suggest one based on the intent; let the user override.
 3. **Will it take extras?** `/my <name>` accepts trailing context. Decide whether this prompt expects extras (a date, a focus area, a Notion URL) or stands alone. If extras are expected, name them in the prompt body so the runtime model knows what to do with them.
 
 ### Step 2 — Identify inputs, tools, and supporting artifacts
@@ -95,7 +95,7 @@ Write it as a self-contained instruction the runtime model will execute cold. Us
 #### Writing principles
 
 - **Stand-alone.** The runbook will be read cold by a model that has zero memory of the conversation that produced it. No "as we discussed", no "the workflow we just walked through", no references to this skill or to other ad-hoc artifacts that aren't actually saved. A reader opening the file fresh should be able to execute it without context. Test this by re-reading the draft and asking: "Would I know what to do if this were the only thing on my screen?"
-- **Imperative form.** "Pull the last 7 days of NPS responses." not "You should pull..."
+- **Imperative form.** "Pull the last 7 days of experiment results." not "You should pull..."
 - **Explain why** when a constraint is non-obvious. A model running this cold will follow rules better when it understands them.
 - **Lean.** Cut anything that doesn't change output. No ceremonial preamble.
 - **Avoid heavy-handed MUSTs.** Reframe as guidance with a reason.
@@ -128,7 +128,7 @@ Before showing the user, run a self-review pass against the draft. The goal is t
 
 - **Stand-alone test.** Are there any references to "the workflow we discussed", "as we did earlier", "the conversation above", or to ad-hoc files that aren't actually being saved? If yes, rewrite or remove. The runbook must be self-contained.
   - *Bad:* "Use the same query approach we did earlier."
-  - *Good:* "Run the SQL in `personal/queries/cx-weekly.sql`."
+  - *Good:* "Run the SQL in `personal/queries/weekly-metrics.sql`."
 - **Cold-execute test.** If the only thing on screen were this runbook, could a model produce the right output? Step through the instructions mentally. Anywhere it would have to guess is a gap to fill.
 - **Reference integrity.** Every file the runbook names — Python script, SQL query, template — either already exists or is being authored alongside in this same save. No dangling pointers.
 - **Inputs check.** Every "required input" has a clear way to be supplied (frontmatter param, position in `extras`, or a prompt-time question). No required input that has no path in.
@@ -159,11 +159,9 @@ Confirm with the exact invocation and list what was written:
 
 If any target already exists, do not silently overwrite. Show the diff or ask whether to replace, version (`<name>-v2`), or merge. Apply this to every file, not just the runbook.
 
-## Worked example in this repo
+## Existing conventions
 
-When drafting a new runbook, read **`.claude/commands/cx-weekly-update.md`** to see the writing style worth borrowing. It's a slash command, not a `/my` prompt, but the conventions transfer directly. Notice: parallel data gathering with explicit "fire these in a single turn", thresholds with the *reason* given inline ("<7 days of MTD comparisons are noisy"), instruction to drop empty sections so the output stays clean, and a clear instruction to lead with the headline metric because "leadership reads the headline first and skims the rest."
-
-The user may also have existing files in `personal/prompts/` worth scanning to match their established conventions — but those are gitignored, so don't assume any specific one exists.
+Scan `personal/prompts/` for any existing runbooks and match the style the user has already established — but those are gitignored, so don't assume any specific one exists. Good runbooks share these traits: parallel data gathering fired in a single turn, thresholds explained inline with the reason (not just the number), empty sections dropped from output, and the most important finding leading rather than buried.
 
 ## Edge cases
 
