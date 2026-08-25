@@ -76,6 +76,7 @@ Always check skills for use cases.
 | `notion-researcher` | Notion search + synthesis (general or strategy-context format) | strategy-doc, any workflow |
 | `notion-writer` | Publishes content to Notion with proper formatting | strategy-doc |
 | `competitor-researcher` | Market landscape and competitive positioning | strategy-doc |
+| `market-sizer` | Bottom-up TAM/SAM/SOM from household and income data, with assumption ledger | strategy-doc, any workflow |
 | `strategy-writer` | Drafts strategy docs in exec-focused style | strategy-doc |
 | `strategy-reviewer` | Critiques strategy docs, surfaces blind spots | strategy-doc |
 

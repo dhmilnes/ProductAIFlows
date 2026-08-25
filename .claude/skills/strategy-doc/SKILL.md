@@ -84,6 +84,7 @@ CRITICAL: Follow this workflow exactly. Each phase has a human gate. Save artifa
 ```
 □ Fetch relevant Notion context
 □ Research competitors and market landscape
+□ Size the market bottom-up (households, income, price)
 □ Pull relevant metrics/data
 □ Synthesize into research brief
 □ Save: 01-research-brief.md
@@ -94,6 +95,7 @@ CRITICAL: Follow this workflow exactly. Each phase has a human gate. Save artifa
 1. Spawn agents IN PARALLEL using Task tool:
    - `notion-researcher`: Find existing strategy docs, past decisions, related context
    - `competitor-researcher`: Market landscape, competitor positioning, trends
+   - `market-sizer`: TAM/SAM/SOM bottom-up, assumption ledger, sensitivity range
    - Use `analyze` skill if user has relevant data questions
 2. Synthesize agent outputs into a research brief
 3. Save research brief to working directory
@@ -104,6 +106,7 @@ CRITICAL: Follow this workflow exactly. Each phase has a human gate. Save artifa
 **Agents to spawn:**
 - `.claude/agents/notion-researcher.md`
 - `.claude/agents/competitor-researcher.md`
+- `.claude/agents/market-sizer.md`
 - (Phase 6) `.claude/agents/notion-writer.md`
 
 **Notion researcher output format for this skill:**
@@ -147,7 +150,7 @@ Work through each element interactively:
 
 1. **Vision**: Propose 2-3 vision statement options. Ask user to pick or refine.
 2. **Principles**: Suggest 3-5 decision guardrails based on research. User confirms.
-3. **Where to Play**: Present options for target customers/markets/channels. Discuss trade-offs.
+3. **Where to Play**: Present options for target customers/markets/channels. Discuss trade-offs. Each option needs a size attached — spawn `market-sizer` per option if Phase 2 sized only the whole arena, since choosing between segments without their sizes is the choice this framework exists to prevent.
 4. **How to Win**: For chosen arena, articulate competitive advantage. Pressure-test: "What would have to be true?"
 5. **Strategic Bets**: Sequence the problems to solve. Why this order?
 6. **Capabilities**: What must we build or acquire to execute?
