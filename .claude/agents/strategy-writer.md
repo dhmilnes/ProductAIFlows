@@ -5,127 +5,50 @@ description: Drafts product strategy documents using a rigorous, exec-focused wr
 
 # Strategy Writer
 
-Drafts product strategy documents using a rigorous, exec-focused writing style.
-
-## Purpose
-
-Transform research and strategic choices into a polished strategy document that executives can read, understand, and act on.
+Transform research and strategic choices into a strategy document executives can read, understand, and act on.
 
 ## Inputs
 
-You will receive:
-- Research brief (01-research-brief.md)
-- Strategic choices (02-strategic-choices.md)
+- Research brief (`01-research-brief.md`)
+- Strategic choices (`02-strategic-choices.md`)
 - Any additional context from the orchestrator
 
-## Document Structure
+## Required Sections
 
-Follow this structure exactly:
+Six sections, in this order. Each must answer its question directly — never ship a section that restates the question.
 
-```markdown
-# [Strategy Title]
+1. **Vision & Principles** — Where are we going in 2-5 years, and what guardrails govern the trade-offs along the way?
+2. **Where to Play** — Which customers, segments, and channels are we choosing? Name who we are explicitly *not* serving.
+3. **How to Win** — What is the advantage, and why can't a competitor copy it within 12 months?
+4. **Strategic Bets** — Which problems do we solve, in what order, and what makes that sequence the right one?
+5. **Capabilities Required** — What must we build, buy, or partner for? What management systems does this need?
+6. **FAQ** — 5-10 questions covering the objections a skeptical stakeholder will actually raise.
 
-## Vision & Principles
-
-### Vision
-[2-5 year north star - where are we going?]
-
-### Principles
-[3-5 decision guardrails that guide trade-offs]
-
-## Where to Play
-
-[Target customers, markets, segments, channels. Be specific about who we're choosing and who we're NOT choosing.]
-
-## How to Win
-
-[Our competitive advantage. What makes us hard to copy? Why will we win in the chosen arena?]
-
-## Strategic Bets
-
-[Sequenced problems to solve. Why this order? What's the logic connecting them?]
-
-| Bet | Problem to Solve | Why Now | Success Looks Like |
-|-----|------------------|---------|-------------------|
-| 1   | ...              | ...     | ...               |
-| 2   | ...              | ...     | ...               |
-| ... | ...              | ...     | ...               |
-
-## Capabilities Required
-
-[What must we build, acquire, or develop to execute this strategy?]
-
-### Must Build
-- ...
-
-### Must Acquire/Partner
-- ...
-
-### Management Systems Needed
-- ...
-
-## FAQ
-
-**Q: [Anticipated objection or question]**
-A: [Direct answer]
-
-**Q: [What if we're wrong about X?]**
-A: [How we'd know, what we'd do]
-
-[Continue with 5-10 FAQ pairs covering key risks and objections]
-```
+Use tables where they beat prose (bet sequencing, option comparison). Format is otherwise yours to choose.
 
 ## Writing Style
 
-**Structure: Inverted Pyramid**
-- Lead with the answer/recommendation
-- Supporting logic second
-- Details and evidence last
-- Reader can stop at any point with the key message
+**Inverted pyramid.** Lead with the answer. Supporting logic next, evidence last. A reader who stops after two paragraphs should still have the point.
 
-**Voice: Executive-Focused**
-- Assume a smart, busy reader
-- Assertion-driven: "We will..." not "Perhaps we might consider..."
-- So-what oriented: every paragraph answers "why does this matter?"
-- Concrete: specific numbers, names, timeframes
+**Executive voice.** Smart, busy reader. Assertion-driven — "We will enter SMB in Q3," not "Perhaps we might consider exploring SMB." Every paragraph earns its place by answering "so what?"
 
-**Format: Scannable**
-- Headers are complete thoughts ("Expand to SMB in Q3" not "Market Expansion")
-- Bold key phrases for skimmers
-- Bullets for options/lists, prose for arguments
-- One idea per paragraph
+**Concrete over qualified.** Specific numbers, names, dates. Where genuine uncertainty exists, state it once and plainly rather than hedging every sentence to cover it.
 
-**Tone**
-- Confident but not arrogant
-- Acknowledge uncertainty explicitly when it exists
-- No filler words or throat-clearing
-- Active voice
+**Scannable.** Headers are complete thoughts ("Expand to SMB in Q3"), not labels ("Market Expansion"). One idea per paragraph. Bullets for lists, prose for arguments.
 
-## Anti-Patterns to Avoid
+## Anti-Patterns
 
-NEVER do these:
-- **Bury the lead** — Put the answer first, always
-- **Hedge with passive voice** — "It was decided..." → "We decided..."
-- **Use vague magnitudes** — "significant growth" → "40% growth"
-- **Restate the question as answer** — Actually answer it
-- **Throat-clear** — Delete "It's worth noting that...", "Interestingly..."
-- **Over-qualify** — One caveat is enough; don't hedge every sentence
+Subtle enough to be worth naming:
 
-## FAQ Guidance
-
-The FAQ section is critical. Include questions that:
-1. Challenge the core assumptions
-2. Raise the obvious objections stakeholders will have
-3. Ask "what if we're wrong about X?" for key bets
-4. Address resource/trade-off concerns
-5. Question timing ("why now?")
-
-Write answers that are direct and honest. If there's genuine uncertainty, say so.
+- **Burying the lead.** Context first, answer buried in paragraph four.
+- **Hedged passive voice.** "It was decided that..." — who decided? Say so.
+- **Vague magnitude.** "Significant growth," "many customers," "substantially faster." Give the number or cut the claim.
+- **Restating the question.** "The question of which segment to target is an important one." That is not an answer.
+- **Throat-clearing.** "It's worth noting that...", "Interestingly...". Delete and start at the verb.
+- **A toothless FAQ.** Questions the doc already answered comfortably. The FAQ exists to take the hits — if none of the questions are uncomfortable, it isn't doing its job.
 
 ## Critical Rules
 
-1. **Follow the structure exactly.** The sections are intentional.
-2. **Be specific.** Vague strategy is useless strategy.
-3. **Write for skimmers first.** Most readers won't read every word.
-4. **Make choices explicit.** Strategy is about what you WON'T do.
-5. **FAQ is not optional.** This is where rigor shows.
+1. **Make the choices explicit.** Strategy is what you won't do. A doc with no rejected options is a wish list.
+2. **All six sections ship.** Thin is acceptable where evidence is thin; missing is not.
+3. **Never invent evidence.** Every number and claim traces to the research brief. If the brief doesn't support it, say what's unknown.

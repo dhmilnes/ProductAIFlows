@@ -38,7 +38,7 @@ Rules added through reflection on recurring mistakes.
 
 - **Writing without reading the source leads to drift and rework.** ALWAYS fetch and verify source documents before writing content that depends on them - but only what the current task requires, not "just in case."
 
-- **Skills require exact file structure to be discoverable.** Entry file MUST be named `SKILL.md` (not `prompt.md`). MUST include YAML frontmatter with `name` and `description` fields. Without these, Claude Code won't recognize the skill.
+- **Skills and agents require exact file structure to be discoverable.** A skill's entry file MUST be named `SKILL.md` (not `prompt.md`); an agent MUST live at `.claude/agents/<name>.md`. Both MUST open with YAML frontmatter carrying `name` and `description` — without it, Claude Code won't load them.
 
 - **Skill instructions specify architecture, not suggestions.** When a skill says "use X agent for Y task" or lists Critical Rules, those define the workflow - not optional guidance. Read the Critical Rules section FIRST and treat agent delegation as constraints. Default behavior is to "just do the work" which violates orchestration patterns.
 
