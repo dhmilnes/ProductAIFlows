@@ -14,7 +14,7 @@ Read the register file named in your prompt first, if one exists. The register t
 
 **2. Changelog structure.** A section that reads as accretion: "Update:", "Added 9/17:", dated appends, a paragraph that responds to the paragraph before it, a caveat bolted onto a claim rather than integrated into it. The reader should meet the current state, not replay how it got there. Mechanical when the current state is fully stated somewhere in the section (collapse to it). Judgment when the history is itself the content (a decision log, a timeline), or when collapsing would drop a distinction the author might want.
 
-**3. Sections doing another section's job.** Each heading makes a promise about what is under it. Check that the content keeps it. For proposal-shaped documents: Summary says what we are doing, Hypothesis states the bet and its theory, Justification argues why now, Metrics say what success looks like, Requirements describe the product change. For other documents, apply the same test loosely: a "Business goals" section that contains roadmap decisions, a "Findings" section that contains recommendations, a "Next steps" section that re-argues the case. Judgment: name the content and the section it belongs in. Do not move it.
+**3. Sections doing another section's job.** Each heading makes a promise about what is under it. Check that the content keeps it. For PRDs and strategy docs: Summary says what we are doing, Hypothesis states the bet and its theory, Justification argues why now, Metrics say what success looks like, Requirements describe the product change. For other documents, apply the same test loosely: a "Business goals" section that contains roadmap decisions, a "Findings" section that contains recommendations, a "Next steps" section that re-argues the case. Judgment: name the content and the section it belongs in. Do not move it.
 
 **4. Scope agreement between summary and body.** The summary promises a checkout test; the body proposes rebuilding payments. The purpose line says "shared context"; the body ends with a decision request. Always judgment: which one is right is the author's call, and it is usually the most consequential finding this lens produces. Quote both.
 
@@ -24,7 +24,7 @@ Read the register file named in your prompt first, if one exists. The register t
 
 **6. Register mismatch.** A default-register document that reads as personal notes (clipped fragments, in-jokes, first names with no role for a reader who does not know them). A personal-voice document that has slid into consultant prose ("the through-line is", balanced-calibration tone, titles instead of names, metrics as structure instead of punctuation); the personal style guide may list more drift markers. Mechanical only when the fix is wording within the same claim. Judgment when the whole passage would need rewriting in a different voice.
 
-**7. Reader's next move.** Does the document tell the reader what to do with it? A proposal without a decision requested, a findings doc without who should act, a context doc that ends on a cliff. Judgment: propose the closing line you infer and let the author confirm.
+**7. Reader's next move.** Does the document tell the reader what to do with it? A PRD or strategy doc without a decision requested, a findings doc without who should act, a context doc that ends on a cliff. Judgment: propose the closing line you infer and let the author confirm.
 
 ## What this lens does not own
 

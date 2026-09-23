@@ -63,6 +63,7 @@ Always check skills for use cases.
 | `red-team` | Adversarial analysis of proposals, arguments, product ideas | `/red-team`, "poke holes in this", "stress test this" |
 | `assumption-mapping` | Decompose a proposed solution into testable leap-of-faith assumptions | "what are we assuming", "before we build this", "how do we de-risk this" |
 | `simplify-doc` | Four-lens edit pass on a finished markdown draft | "tighten this", "polish before I send", `/simplify-doc` |
+| `pm-style` | Writing standards for PM documents (PRDs, strategy docs, briefs) | Drafting or reviewing any PM document |
 | `make-my` | Author a new personal runbook in `personal/prompts/` | "save this", "make this reusable", "turn this into a /my" |
 
 **Commands** (`.claude/commands/`) — User-invokable via `/command-name`.

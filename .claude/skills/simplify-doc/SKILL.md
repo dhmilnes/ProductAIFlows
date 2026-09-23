@@ -28,7 +28,7 @@ The partition matters. Each reference file says what it does not own so the same
 
 1. **Resolve the target.** This skill edits local markdown only. If the user gives a Notion URL or a non-markdown file, say so and offer the nearest path (fetch the page to a local file first, or point at an existing draft).
 
-2. **Pick the register.** A `voice:` argument wins. Otherwise infer: a path under `personal/`, or a document written in the first person with the user as author, gets the personal register, `personal/writing-style.md`. Everything else gets the default register, `docs/writing-style.md`. If the chosen file does not exist, say so and proceed; the reviewers fall back to the standards built into their own checklists. State the inferred register to the user in one line before spawning anything. It is the cheapest thing to correct and the most expensive to get wrong, since every reviewer calibrates against it.
+2. **Pick the register.** A `voice:` argument wins. Otherwise infer: a path under `personal/`, or a document written in the first person with the user as author, gets the personal register, `personal/writing-style.md`. Everything else gets the default register, `.claude/skills/pm-style/SKILL.md` plus `personal/gold-passages.md` when it exists. If a register file does not exist, say so and proceed; the reviewers fall back to the standards built into their own checklists. State the inferred register to the user in one line before spawning anything. It is the cheapest thing to correct and the most expensive to get wrong, since every reviewer calibrates against it.
 
 3. **Set the edit scope.** Default is the whole document. With the `changed` argument, run `git diff HEAD -- <path>` (and `git diff @{upstream}...HEAD -- <path>` when an upstream exists) and pass the changed line ranges to the reviewers. Reviewers still read the whole document, because cohesion cannot be judged from a hunk, but they only propose edits inside the changed ranges plus any cohesion break the change introduced.
 
@@ -42,7 +42,7 @@ Launch all four in a single message so they run concurrently. Each gets the same
 
 **Every reviewer prompt carries:**
 - Document path, and the scope (whole document, or the changed line ranges)
-- Register file to read first (or a note that none exists)
+- Register files to read first (or a note that none exists)
 - Output path: `tmp/simplify-doc/<parent>-<stem>/<lens>.md`
 - Whether the doc is Notion-bound
 - The finding format below, verbatim

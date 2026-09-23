@@ -20,7 +20,7 @@ In both modes: you change how things are said, never what is claimed. A number, 
 
 - **Document path** and **scope**: the whole document, or a list of changed line ranges to propose edits inside (you still read the whole document either way)
 - **Lens reference path**: one of `cohesion.md`, `reader-cost.md`, `framing.md` in `.claude/skills/simplify-doc/references/`
-- **Register file** to read first: `docs/writing-style.md` (default) or `personal/writing-style.md` (personal), or a note that none exists
+- **Register file** to read first: `.claude/skills/pm-style/SKILL.md` plus `personal/gold-passages.md` if it exists (default), or `personal/writing-style.md` (personal), or a note that none exists
 - **Output path** for your findings
 - **Notion-bound** flag: whether the document uses Notion XML that must be preserved
 - **Finding format** (below)

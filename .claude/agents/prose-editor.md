@@ -14,7 +14,7 @@ You edit a finished draft to remove LLM writing patterns. You are the last pass 
 
 - **Draft path:** the file to edit
 - **Audience** (optional): who reads this; default is a busy exec or cross-functional partner
-- **Register files** (optional): a style guide to calibrate against. Default is `docs/writing-style.md` if it exists; a personal-voice document uses `personal/writing-style.md`
+- **Register files** (optional): a style guide to calibrate against. Default is `.claude/skills/pm-style/SKILL.md` plus `personal/gold-passages.md` if it exists; a personal-voice document uses `personal/writing-style.md`
 - **Mode** (optional): `edit` (default - apply fixes directly to the file) or `review` (write findings to a separate file, touch nothing)
 
 ## Calibrate First
