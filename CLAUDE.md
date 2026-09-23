@@ -62,6 +62,7 @@ Always check skills for use cases.
 | `strategy-doc` | Product strategy documents using Cagan + P2W frameworks | User wants to develop strategy |
 | `red-team` | Adversarial analysis of proposals, arguments, product ideas | `/red-team`, "poke holes in this", "stress test this" |
 | `assumption-mapping` | Decompose a proposed solution into testable leap-of-faith assumptions | "what are we assuming", "before we build this", "how do we de-risk this" |
+| `simplify-doc` | Four-lens edit pass on a finished markdown draft | "tighten this", "polish before I send", `/simplify-doc` |
 | `make-my` | Author a new personal runbook in `personal/prompts/` | "save this", "make this reusable", "turn this into a /my" |
 
 **Commands** (`.claude/commands/`) — User-invokable via `/command-name`.
@@ -79,6 +80,9 @@ Always check skills for use cases.
 | `competitor-researcher` | Market landscape and competitive positioning | strategy-doc |
 | `strategy-writer` | Drafts strategy docs in exec-focused style | strategy-doc |
 | `strategy-reviewer` | Critiques strategy docs, surfaces blind spots | strategy-doc |
+| `doc-editor` | Lens review (cohesion, reader cost, framing) and merge-and-apply editing | simplify-doc |
+| `prose-editor` | Sentence-level de-slop pass: filler, hedging, contrast frames, em dashes | simplify-doc, any workflow |
+| `doc-researcher` | Returns raw passages from local files with `path:line` pointers, no verdicts | any workflow |
 
 ## Personal Query Library
 
