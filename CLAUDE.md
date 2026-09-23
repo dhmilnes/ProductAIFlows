@@ -61,6 +61,7 @@ Always check skills for use cases.
 | `test-thinking` | A/B test variation design | User designing test variations |
 | `strategy-doc` | Product strategy documents using Cagan + P2W frameworks | User wants to develop strategy |
 | `red-team` | Adversarial analysis of proposals, arguments, product ideas | `/red-team`, "poke holes in this", "stress test this" |
+| `assumption-mapping` | Decompose a proposed solution into testable leap-of-faith assumptions | "what are we assuming", "before we build this", "how do we de-risk this" |
 | `make-my` | Author a new personal runbook in `personal/prompts/` | "save this", "make this reusable", "turn this into a /my" |
 
 **Commands** (`.claude/commands/`) — User-invokable via `/command-name`.
