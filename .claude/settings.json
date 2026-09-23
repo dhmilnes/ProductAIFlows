@@ -10,6 +10,17 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/orchestration_reminder.py",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }
