@@ -61,6 +61,9 @@ Always check skills for use cases.
 | `test-thinking` | A/B test variation design | User designing test variations |
 | `strategy-doc` | Product strategy documents using Cagan + P2W frameworks | User wants to develop strategy |
 | `red-team` | Adversarial analysis of proposals, arguments, product ideas | `/red-team`, "poke holes in this", "stress test this" |
+| `assumption-mapping` | Decompose a proposed solution into testable leap-of-faith assumptions | "what are we assuming", "before we build this", "how do we de-risk this" |
+| `simplify-doc` | Four-lens edit pass on a finished markdown draft | "tighten this", "polish before I send", `/simplify-doc` |
+| `pm-style` | Writing standards for PM documents (PRDs, strategy docs, briefs) | Drafting or reviewing any PM document |
 | `make-my` | Author a new personal runbook in `personal/prompts/` | "save this", "make this reusable", "turn this into a /my" |
 
 **Commands** (`.claude/commands/`) — User-invokable via `/command-name`.
@@ -78,6 +81,9 @@ Always check skills for use cases.
 | `competitor-researcher` | Market landscape and competitive positioning | strategy-doc |
 | `strategy-writer` | Drafts strategy docs in exec-focused style | strategy-doc |
 | `strategy-reviewer` | Critiques strategy docs, surfaces blind spots | strategy-doc |
+| `doc-editor` | Lens review (cohesion, reader cost, framing) and merge-and-apply editing | simplify-doc |
+| `prose-editor` | Sentence-level de-slop pass: filler, hedging, contrast frames, em dashes | simplify-doc, any workflow |
+| `doc-researcher` | Returns raw passages from local files with `path:line` pointers, no verdicts | any workflow |
 
 ## Personal Query Library
 
@@ -146,6 +152,45 @@ When workflows spawn sub-agents:
 2. **Separation of concerns** - Research agents don't write, writing agents don't search
 3. **Parallel execution** - Spawn independent agents simultaneously when possible
 4. **Clear handoffs** - Agents return focused briefs, orchestrator decides what to commit
+5. **Single writer per page** - The orchestrator owns the *decision* to write and the user's approval for it; the write itself is normally delegated to `notion-writer`, a shared utility agent any workflow can spawn. Only one agent writes a given page in a task, and it re-fetches the page immediately before and after the write.
+
+### Orchestrator-First Working Model
+
+The main session (Opus) is the **orchestrator**: it frames, decides, and delegates — it does not do bulk labor itself. Right-size every delegated task to the cheapest model tier and lowest effort that fits. Goal: control cost and keep the orchestrator's context lean and long-lived.
+
+Delegation is **three orthogonal decisions**:
+
+**1. Locus — inline vs. delegate.**
+- **Delegate when** (the heavy-in/heavy-out test): *heavy-in* (a large source to digest — file, page, query results, transcript) · *heavy-out* (more than ~a page produced) · parallelizable fan-out · **batchable mechanical volume** (many small homogeneous edits/lookups — batch into ONE spawn) · context hygiene (would otherwise dump use-once debris into durable context).
+- **Keep inline when**: a single small task below the boot threshold and not batchable with siblings · needs this conversation's live, accumulating context · it *is* the orchestration role (weighing results, deciding next steps, user alignment) · trivial or already known.
+- The boot threshold (~20k tokens reloaded per spawn: system prompt + this file + tool schemas) is **per-spawn, not per-item** — batch small homogeneous tasks into one spawn to clear it. Conversely, when fanning out *independent* tasks, use the **fewest spawns that preserve useful parallelism** — each spawn re-pays the boot cost, so consolidate (don't over-fan-out) when the work per item is small or latency is cheap. "Hard" is *not* a reason to stay inline: hard + heavy + self-contained → an **Opus sub-agent** (keeps the bulk and intermediate reasoning out of durable context).
+- **A definition or schema lookup is heavy-in retrieval — delegate it.** Reading a doc to nail down a field meaning, table name, or definition is the same as digesting any large source: send a Haiku Explore agent and get the ≤5-line conclusion back. Don't pull the source into your context "just to be sure" — "I need to *understand* this first" is the rationalization that smuggles heavy-in reads inline.
+
+**2. Tier — capability** (`model=` per call, or the agent's frontmatter default):
+- **Haiku** — retrieval, fetch, mechanical audits, executors. No open-ended reasoning.
+- **Sonnet** — reasoning, writing, code (the floor for code generation), citation research, fact-checking.
+- **Opus** — hard synthesis/analysis/decomposition; the orchestrator runs here, or a sub-agent for hard + heavy + self-contained work.
+
+**3. Effort — deliberation depth** (config-time only: agent frontmatter `effort:` + session `effortLevel`; no per-call override; Haiku has no effort knob). Tier = capability ceiling; effort = how much of it you spend. Need more capability → up a tier; need more deliberation → up effort.
+
+**File-handoff (always, when delegating):** every delegated task names an output path (`tmp/` for ephemeral inter-agent context, `output/`·`research_briefs/` for keepers); the sub-agent writes there and returns a pointer + ≤5-line summary — never a full dump back into the orchestrator's context. The orchestrator reads the file only when it needs the detail.
+
+**Numbers travel as provenance-tagged data, never as summary prose.** Any figure destined for a deliverable comes back in the handoff *file* as an exact value with its source pointer (CSV path + column, Notion page + the exact figure, query + cell) — never rounded or paraphrased into the ≤5-line summary. The orchestrator reports from the artifact and audits the deliverable; it does NOT transcribe figures out of a sub-agent's summary. This is how delegation and verification reconcile: verification happens at the point of contact (the sub-agent reading the source), and the orchestrator owns auditability, not re-reading.
+
+**Mixed-complexity:** tier the sub-task, not the skill (mechanical → Haiku, hard core → Sonnet/Opus, tests → Sonnet); on uncertain complexity start at the higher tier (try-cheap-then-retry pays twice).
+
+**Pricing rationale (per 1M tokens):** Opus $5/$25 · Sonnet $3/$15 · Haiku $1/$5. Haiku is 5× cheaper than Opus, 3× cheaper than Sonnet (same ratio in/out) — moving a task down one tier buys 3–5× the tokens at equal cost.
+
+## Trust Is Built by Being Cheap to Verify
+
+The way an agent loses a user's trust is by raising their **correction load** — and it compounds. One wrong output isn't one unit of cost; it's a tax on trust in *everything else*, because the user now has to re-check all of it to find which parts are safe. So the target is not "be right" — it's **be cheap to verify**: minimize how much of the output the reader must independently check before they can rely on it. An output that is 90% right but hides which 10% is wrong is *less* trustworthy than one that is 80% right and marks its own uncertain spots — the second lets the reader check two places and move on; the first taxes everything.
+
+Two failure modes raise verification cost, and both erode trust:
+
+- **Hard to parse → high audit cost per claim.** If the reader has to work to follow the output, they can't scan-verify it; errors hide in the density. Lead with the conclusion, keep each claim adjacent to its support, and drop schema names, jargon, and reflexive hedging from reader-facing prose. (Concretely: write full sentences, state the end state not the process, stay with facts, don't conclude on thin data.)
+- **Jumps to conclusions → confidence stops carrying information.** The first time a confident assertion turns out to be a leap, the reader learns the confidence was decoration and discounts all of it afterward. The fix is not timidity — it's **calibration**: state confidence at the level the evidence earns, so "true," "probably true," and "couldn't confirm" read as visibly different.
+
+These two pull against each other if handled naively — uniform hedging is *harder* to parse, not safer, because every sentence sounds equally unsure and the reader must re-derive which caveats are load-bearing. Good calibration is **decisive where the evidence is solid and explicit where it's thin**, both stated plainly, neither smeared across the whole thing. A well-calibrated output is easier to audit than a hedged one, because it tells the reader where to spend attention.
 
 ## Boundaries
 
