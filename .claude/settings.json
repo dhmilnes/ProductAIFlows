@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python scripts/cleanup_tmp.py",
+            "command": "python -c \"import os,glob,runpy;d=os.environ.get('CLAUDE_PROJECT_DIR') or os.getcwd();c=[p for p in [os.path.join(d,'scripts','cleanup_tmp.py')]+glob.glob(os.path.join(d,'*','scripts','cleanup_tmp.py')) if os.path.isfile(p)];c and runpy.run_path(c[0],run_name='__main__')\"",
             "timeout": 10
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python scripts/orchestration_reminder.py",
+            "command": "python -c \"import os,glob,runpy;d=os.environ.get('CLAUDE_PROJECT_DIR') or os.getcwd();c=[p for p in [os.path.join(d,'scripts','orchestration_reminder.py')]+glob.glob(os.path.join(d,'*','scripts','orchestration_reminder.py')) if os.path.isfile(p)];c and runpy.run_path(c[0],run_name='__main__')\"",
             "timeout": 5
           }
         ]
